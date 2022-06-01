@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using North.Business.Repositories.Abstracts;
+using North.Core.Entities;
 using North.Web.Models;
 using System.Diagnostics;
 
@@ -7,15 +9,18 @@ namespace North.Web.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IRepository<Product, int> _productRepo;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IRepository<Product, int> productRepo)
         {
             _logger = logger;
+            _productRepo = productRepo;
         }
 
         public IActionResult Index()
         {
-            return View();
+            var model = _productRepo.Get().ToList();
+            return View(model);
         }
 
         public IActionResult Privacy()
